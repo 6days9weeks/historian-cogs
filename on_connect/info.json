@@ -1,0 +1,8 @@
+{
+    "author": ["kato#0666"],
+    "install_msg": "As always feel free to use it, found an bug/error? report on github, don't come to me for help, will get blocked, `[p]connectset` to get started.",
+    "name": "on_connect",
+    "short": "on_connect",
+    "description": "The cog name should explain itself.",
+    "min_bot_version": "3.3.10"
+  }
