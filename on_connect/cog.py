@@ -196,7 +196,7 @@ class OnConnect(commands.Cog):
         """
         if not channel:
             await self.config.event_channel.set(None)
-            return await ctx.send("Event channel has been removed. Set a new one using the same command.
+            return await ctx.send("Event channel has been removed. Set a new one using the same command.")
         await self.config.event_channel.set(channel.id)
         await self.build_cache()
         await ctx.send(f"Event channel has been set to: {channel.mention}")
