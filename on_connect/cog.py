@@ -195,7 +195,8 @@ class OnConnect(commands.Cog):
         Setup the channel where the events will be sent.
         """
         if channel is None:
-            channel = ctx.channel
+            await self.config.event_channel.set(None)
+            return await ctx.send("Event channel has been removed. Set a new one using the same command.")
         await self.config.event_channel.set(channel.id)
         await self.build_cache()
         await ctx.send(f"Event channel has been set to: {channel.mention}")
