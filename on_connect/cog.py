@@ -190,11 +190,11 @@ class OnConnect(commands.Cog):
         """
 
     @connectset.command()
-    async def channel(self, ctx: commands.Context, channel: discord.TextChannel):
+    async def channel(self, ctx: commands.Context, channel: discord.TextChannel = None):
         """
         Setup the channel where the events will be sent.
         """
-        if not channel:
+        if channel is None:
             await self.config.event_channel.set(None)
             return await ctx.send("Event channel has been removed. Set a new one using the same command.")
         await self.config.event_channel.set(channel.id)
