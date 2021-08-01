@@ -74,6 +74,7 @@ class OnConnect(commands.Cog):
             color=0x81E0A9,
             timestamp=dt.utcnow()
         )
+        embed.set_thumbnail(url=self.bot.user.avatar_url)
         await self.send_event(embed)
 
     @commands.Cog.listener()
