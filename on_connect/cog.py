@@ -72,6 +72,7 @@ class OnConnect(commands.Cog):
             title="Connected to discord.",
             description="I've successfully established a connection to discord.",
             color=0x81E0A9,
+            timestamp=dt.utcnow()
         )
         await self.send_event(embed)
 
@@ -173,9 +174,9 @@ class OnConnect(commands.Cog):
     @commands.command(name="oct")
     @commands.is_owner()
     async def on_connect_test(self, ctx):
-        """Just a webhook test"""
+        """Just a event sender test"""
         embed = discord.Embed(
-            color=await self.embed_colour(), title="Hook Test", timestamp=dt.utcnow()
+            color=await ctx.embed_color(), title="Hook Test", timestamp=dt.utcnow()
         )
         await self.send_event(embed)
         await ctx.tick()
