@@ -1,7 +1,6 @@
 import datetime
 import re
 from abc import ABC
-from enum import Enum
 from html.parser import HTMLParser
 from typing import Any, Dict, List, Optional
 
@@ -151,21 +150,17 @@ class HTMLFilter(HTMLParser, ABC):
         self.text += data
 
 
-class AniListSearchType(Enum):
-    """AniListSearchType Enum."""
-
-    ANIME = "ANIME"
-    MANGA = "MANGA"
-    CHARACTER = "CHARACTER"
-    STAFF = "STAFF"
-    STUDIO = "STUDIO"
+class AniListSearchType:
+    Anime = "Anime"
+    Manga = "Manga"
+    Character = "Character"
+    Staff = "Staff"
+    Studio = "Studio"
 
 
-class AniListMediaType(Enum):
-    """AniListMediaType Enum."""
-
-    ANIME = "ANIME"
-    MANGA = "MANGA"
+class AniListMediaType:
+    Anime = "Anime"
+    Manga = "Manga"
 
 
 class EmbedListMenu(menus.ListPageSource):
@@ -173,11 +168,11 @@ class EmbedListMenu(menus.ListPageSource):
     Paginated embed menu.
     """
 
-    def __init__(self, data):
+    def __init__(self, embeds):
         """
         Initializes the EmbedListMenu.
         """
-        super().__init__(data, per_page=1)
+        super().__init__(embeds, per_page=1)
 
     async def format_page(self, menu, embeds):
         """
@@ -229,9 +224,7 @@ def get_char_staff_name(data: Dict[str, Any]) -> str:
 
 
 def format_media_type(media_type: str) -> str:
-    """
-    Formats the anilist media type.
-    """
+    """Formats the anilist media type."""
     MediaType = {
         "TV": "TV",
         "MOVIE": "Movie",
@@ -248,9 +241,7 @@ def format_media_type(media_type: str) -> str:
 
 
 def format_anime_status(media_status: str) -> str:
-    """
-    Formats the anilist anime status.
-    """
+    """Formats the anilist anime status."""
     AnimeStatus = {
         "FINISHED": "Finished",
         "RELEASING": "Currently Airing",
@@ -261,9 +252,7 @@ def format_anime_status(media_status: str) -> str:
 
 
 def format_manga_status(media_status: str) -> str:
-    """
-    Formats the anilist manga status.
-    """
+    """Formats the anilist manga status."""
     MangaStatus = {
         "FINISHED": "Finished",
         "RELEASING": "Publishing",
@@ -274,17 +263,14 @@ def format_manga_status(media_status: str) -> str:
 
 
 def clean_html(raw_text) -> str:
-    """
-    Removes the html tags from a text.
-    """
+    """Removes the html tags from a text."""
     clean = re.compile("<.*?>")
-    return re.sub(clean, "", raw_text)
+    clean_text = re.sub(clean, "", raw_text)
+    return clean_text
 
 
 def format_description(description: str, length: int) -> str:
-    """
-    Formats the anilist description.
-    """
+    """Formats the anilist description."""
     description = clean_html(description)
     # Remove markdown
     description = description.replace("**", "").replace("__", "")
@@ -300,9 +286,7 @@ def format_description(description: str, length: int) -> str:
 
 
 def format_date(day: int, month: int, year: int) -> str:
-    """
-    Formats the anilist date.
-    """
+    """Formats the anilist date."""
     month = datetime.date(1900, month, 1).strftime("%B")
     date = f"{month} {str(day)}, {year}"
     return date

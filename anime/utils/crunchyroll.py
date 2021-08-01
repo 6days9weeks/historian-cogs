@@ -4,51 +4,26 @@ from typing import Any, Dict, List, Optional, Union
 import aiohttp
 from bs4 import BeautifulSoup
 
-from .utils import CRUNCHYROLL_NEWS_FEED_ENDPOINT
+from ..utility import CRUNCHYROLL_NEWS_FEED_ENDPOINT
 
 log = logging.getLogger("red.historian.anime")
 
 
 class CrunchyrollException(Exception):
-    """
-    Base exception class for the Crunchyroll RSS feed parser.
-    """
+    """Base exception class for the Crunchyroll RSS feed parser."""
 
 
 class CrunchyrollFeedError(CrunchyrollException):
-    """
-    Exception due to an error response from the Crunchyroll RSS feed.
-    """
+    """Exception due to an error response from the Crunchyroll RSS feed."""
 
     def __init__(self, status: int) -> None:
-        """
-        Initializes the CrunchyrollFeedError exception.
-        Args:
-            status (int): The status code.
-        """
         super().__init__(status)
 
 
-class CrunchyrollClientError(CrunchyrollException):
-    """
-    Exceptions that do not involve the RSS feed.
-    """
-
-
 class CrunchyrollClient:
-    """
-    Asynchronous parser client for the Crunchyroll RSS feed.
-    This class is used to interact with the RSS feed.
-    Attributes:
-        session (aiohttp.ClientSession): An aiohttp session.
-    """
+    """Asynchronous parser client for the Crunchyroll RSS feed."""
 
     def __init__(self, session: Optional[aiohttp.ClientSession] = None) -> None:
-        """
-        Initializes the CrunchyrollClient.
-        Args:
-            session (aiohttp.ClientSession, optional): An aiohttp session.
-        """
         self.session = session
 
     async def __aenter__(self):
@@ -58,32 +33,18 @@ class CrunchyrollClient:
         await self.close()
 
     async def close(self) -> None:
-        """
-        Closes the aiohttp session.
-        """
+        """Closes the aiohttp session."""
         if self.session is not None:
             await self.session.close()
 
     async def _session(self) -> aiohttp.ClientSession:
-        """
-        Gets an aiohttp session by creating it if it does not already exist or the previous session is closed.
-        Returns:
-            aiohttp.ClientSession: An aiohttp session.
-        """
+        """Gets an aiohttp session by creating it if it does not already exist or the previous session is closed."""
         if self.session is None or self.session.closed:
             self.session = aiohttp.ClientSession()
         return self.session
 
     async def _request(self, url: str) -> str:
-        """
-        Makes a request to the Crunchyroll RSS feed.
-        Args:
-            url (str): The url used for the request.
-        Returns:
-            str: The RSS feed as text.
-        Raises:
-            CrunchyrollFeedError: If the response contains an error.
-        """
+        """Makes a request to the Crunchyroll RSS feed."""
         session = await self._session()
         response = await session.get(url)
         if response.status == 200:
@@ -94,15 +55,7 @@ class CrunchyrollClient:
 
     @staticmethod
     async def _parse_feed(text: str, count: int) -> Union[List[Dict[str, Any]], None]:
-        """
-        Parses the feed and creates a dictionary for each entry.
-        Args:
-            text (str): The feed as text to parse.
-            count (int): The number of items to return.
-        Returns:
-            list: Dictionaries with the data about the feed.
-            None: If no items were found.
-        """
+        """Parses the feed and creates a dictionary for each entry."""
         soup = BeautifulSoup(text, "html.parser")
         items = soup.find_all("item")
         if items:
@@ -122,14 +75,7 @@ class CrunchyrollClient:
         return None
 
     async def news(self, count: int) -> Union[List[Dict[str, Any]], None]:
-        """
-        Gets a list of anime news.
-        Args:
-            count (int): The number of anime news.
-        Returns:
-            list: Dictionaries with the data about the anime news.
-            None: If no anime news were found.
-        """
+        """Gets a list of anime news."""
         text = await self._request(CRUNCHYROLL_NEWS_FEED_ENDPOINT)
         data = await self._parse_feed(text=text, count=count)
         if data:
