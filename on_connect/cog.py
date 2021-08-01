@@ -228,3 +228,14 @@ class OnConnect(commands.Cog):
             await self.build_cache()
         else:
             await ctx.send("Invalid type. Choose between 0 (webhook) or 1 (normal messages).")
+
+    @connectset.command(aliases=["settings"])
+    async def showsettings(self, ctx: commands.Context):
+        """
+        Show the current settings.
+        """
+        await ctx.send(
+            "**__On Connect Settings__**\n"
+            f"```nim\nEvent Channel: {self.channel}\n"
+            f"Type: {'Webhook Messages' if self.type == 0 else 'Normal Messages'}```"
+        )            
