@@ -72,7 +72,9 @@ class OnConnect(commands.Cog):
             title="Connected to discord.",
             description="I've successfully established a connection to discord.",
             color=0x81E0A9,
+            timestamp=dt.utcnow()
         )
+        embed.set_thumbnail(url=self.bot.user.avatar_url)
         await self.send_event(embed)
 
     @commands.Cog.listener()
@@ -173,9 +175,9 @@ class OnConnect(commands.Cog):
     @commands.command(name="oct")
     @commands.is_owner()
     async def on_connect_test(self, ctx):
-        """Just a webhook test"""
+        """Just a event sender test"""
         embed = discord.Embed(
-            color=await self.embed_colour(), title="Hook Test", timestamp=dt.utcnow()
+            color=await ctx.embed_color(), title="Hook Test", timestamp=dt.utcnow()
         )
         await self.send_event(embed)
         await ctx.tick()
@@ -227,3 +229,14 @@ class OnConnect(commands.Cog):
             await self.build_cache()
         else:
             await ctx.send("Invalid type. Choose between 0 (webhook) or 1 (normal messages).")
+
+    @connectset.command(aliases=["settings"])
+    async def showsettings(self, ctx: commands.Context):
+        """
+        Show the current settings.
+        """
+        await ctx.send(
+            "**__On Connect Settings__**\n"
+            f"```nim\nEvent Channel: {self.channel}\n"
+            f"Type: {'Webhook Messages' if self.type == 0 else 'Normal Messages'}```"
+        )            
